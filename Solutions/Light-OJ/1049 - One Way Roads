@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 105
+int cost[sz][sz];
+int connected[sz][sz];
+vector <int> g[sz];
+
+void clr()
+{
+    for(int i = 0; i < sz; i++) g[i].clear();
+    memset(connected, false, sizeof(connected));
+}
+int main()
+{
+    int tc,a,b,c,u,v,parent,curr,t1,t2;
+  
+    cin >> tc;
+    for(int T = 1; T <= tc; T++)
+    {
+        clr();
+        int n;
+        cin >> n;
+        cin >> a >> b >> c;
+
+        g[a].push_back(b);
+        g[b].push_back(a);
+        cost[a][b] = c;
+        connected[a][b] = true;
+
+        for(int i = 1; i < n; i++)
+        {
+            cin >> u >> v >> c;
+            cost[u][v] = c;
+            connected[u][v] = true;
+            g[u].push_back(v);
+            g[v].push_back(u);
+        }
+
+        parent = a;
+        curr = b;
+        t1 = 0;
+
+        while(curr!= a)
+        {
+            for(int i = 0; i < g[curr].size(); i++)
+            {
+                int v = g[curr][i];
+
+                if(v == parent) continue;
+
+                if(!connected[curr][v])
+                {
+                    t1 += cost[v][curr];
+                }
+                parent = curr;
+                curr = v;
+                break;
+            }
+        }
+
+        parent = b;
+        curr = a;
+        t2 = cost[a][b];
+
+        while(curr!= b)
+        {
+
+            for(int i = 0; i < g[curr].size(); i++)
+            {
+                int v = g[curr][i];
+
+                if(v == parent) continue;
+
+                if(!connected[curr][v])
+                {
+                    t2 += cost[v][curr];
+                }
+                parent = curr;
+                curr = v;
+                break;
+            }
+        }
+        cout << "Case " << T << ": " << min(t1,t2) << endl;
+    }
+}
